@@ -9,6 +9,7 @@ const char *mypath[] = {
 		/* Wait for input */
 		printf ("prompt> ");
 		fgets (...);
+		/* Parse input */
 	while (( ... = strsep (...)) != NULL){
 		...
 	}
