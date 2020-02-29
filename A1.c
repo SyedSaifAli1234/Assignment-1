@@ -34,10 +34,6 @@ int takeInput(char* str) {
 	char* buf; 
 
 	buf = readline("\nprompt> ");
-	//printf("\nprompt>>> ");
-	// fgets(buf, 50 , stdin);
-	// printf("%s", buf);
-	// printf("kissa");
 	if (strlen(buf) != 0) { 
 		add_history(buf); 
 		strcpy(str, buf); 
