@@ -33,7 +33,11 @@ void init_shell() {
 int takeInput(char* str) { 
 	char* buf; 
 
-	buf = readline("\n>>> ");
+	buf = readline("\nprompt> ");
+	//printf("\nprompt>>> ");
+	// fgets(buf, 50 , stdin);
+	// printf("%s", buf);
+	// printf("kissa");
 	if (strlen(buf) != 0) { 
 		add_history(buf); 
 		strcpy(str, buf); 
@@ -152,7 +156,7 @@ int ownCmdHandler(char** parsed) {
 	for (i = 0; i < NoOfOwnCmds; i++) { 
 		if (strcmp(parsed[0], ListOfOwnCmds[i]) == 0) { 
 			switchOwnArg = i + 1; 
-			break; 
+			break;
 		} 
 	} 
 
@@ -161,6 +165,7 @@ int ownCmdHandler(char** parsed) {
 		printf("\nGoodbye\n"); 
 		exit(0); 
 	case 2: 
+		printf("In chdir when ls entered\n");
 		chdir(parsed[1]); 
 		return 1; 
 	case 3: 
@@ -229,9 +234,6 @@ int processString(char* str, char** parsed, char** parsedpipe) {
 	else
 		return 1 + piped; 
 } 
-
-
-
 
 
 int main() { 
