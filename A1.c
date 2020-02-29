@@ -31,9 +31,13 @@ void init_shell() {
 
 // Function to take input 
 int takeInput(char* str) { 
-	char* buf; 
+	char buf[15]; 
 
-	buf = readline("\nprompt> ");
+	//buf = readline("\nprompt> ");
+	printf("\nprompt>>>");
+	fgets(buf, 15, stdin);
+	buf[strcspn(buf, "\n")] = 0;
+	printf("works: %s", buf);
 	if (strlen(buf) != 0) { 
 		add_history(buf); 
 		strcpy(str, buf); 
@@ -243,7 +247,7 @@ int main() {
 		printDir(); 
 		// take input 
 		if (takeInput(inputString)) 
-			continue; 
+			continue;
 		// process 
 		execFlag = processString(inputString, 
 		parsedArgs, parsedArgsPiped); 
