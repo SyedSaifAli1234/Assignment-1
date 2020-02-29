@@ -132,9 +132,7 @@ void execArgsPiped(char** parsed, char** parsedpipe)
 // Help command builtin 
 void openHelp() 
 { 
-	puts("\n***WELCOME TO MY SHELL HELP***"
-		"\nCopyright @ Suprotik Dey"
-		"\n-Use the shell at your own risk..."
+	puts("\n---WELCOME TO HELP---"
 		"\nList of Commands supported:"
 		"\n>cd"
 		"\n>ls"
@@ -177,9 +175,7 @@ int ownCmdHandler(char** parsed)
 		return 1; 
 	case 4: 
 		username = getenv("USER"); 
-		printf("\nHello %s.\nMind that this is "
-			"not a place to play around."
-			"\nUse help to know more..\n", 
+		printf("\nHello %s.\n", 
 			username); 
 		return 1; 
 	default: 
