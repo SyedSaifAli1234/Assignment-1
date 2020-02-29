@@ -15,8 +15,7 @@
 #define clear() printf("\033[H\033[J") 
 
 // Greeting shell during startup 
-void init_shell() 
-{ 
+void init_shell() { 
 	clear(); 
 	printf("\n\n\n\n******************"
 		"************************"); 
@@ -31,8 +30,7 @@ void init_shell()
 } 
 
 // Function to take input 
-int takeInput(char* str) 
-{ 
+int takeInput(char* str) { 
 	char* buf; 
 
 	buf = readline("\n>>> ");
@@ -46,16 +44,14 @@ int takeInput(char* str)
 } 
 
 // Function to print Current Directory. 
-void printDir() 
-{ 
+void printDir() { 
 	char cwd[1024]; 
 	getcwd(cwd, sizeof(cwd)); 
 	printf("\nDir: %s", cwd); 
 } 
 
 // Function where the system command is executed 
-void execArgs(char** parsed) 
-{ 
+void execArgs(char** parsed) { 
 	// Forking a child 
 	pid_t pid = fork(); 
 
@@ -75,8 +71,7 @@ void execArgs(char** parsed)
 } 
 
 // Function where the piped system commands is executed 
-void execArgsPiped(char** parsed, char** parsedpipe) 
-{ 
+void execArgsPiped(char** parsed, char** parsedpipe) { 
 	// 0 is read end, 1 is write end 
 	int pipefd[2]; 
 	pid_t p1, p2; 
@@ -130,8 +125,7 @@ void execArgsPiped(char** parsed, char** parsedpipe)
 } 
 
 // Help command builtin 
-void openHelp() 
-{ 
+void openHelp() { 
 	puts("\n---WELCOME TO HELP---"
 		"\nList of Commands supported:"
 		"\n>cd"
@@ -145,8 +139,7 @@ void openHelp()
 } 
 
 // Function to execute builtin commands 
-int ownCmdHandler(char** parsed) 
-{ 
+int ownCmdHandler(char** parsed) { 
 	int NoOfOwnCmds = 4, i, switchOwnArg = 0; 
 	char* ListOfOwnCmds[NoOfOwnCmds]; 
 	char* username; 
@@ -186,8 +179,7 @@ int ownCmdHandler(char** parsed)
 } 
 
 // function for finding pipe 
-int parsePipe(char* str, char** strpiped) 
-{ 
+int parsePipe(char* str, char** strpiped) { 
 	int i; 
 	for (i = 0; i < 2; i++) { 
 		strpiped[i] = strsep(&str, "|"); 
@@ -203,8 +195,7 @@ int parsePipe(char* str, char** strpiped)
 } 
 
 // function for parsing command words 
-void parseSpace(char* str, char** parsed) 
-{ 
+void parseSpace(char* str, char** parsed) { 
 	int i; 
 
 	for (i = 0; i < MAXLIST; i++) { 
@@ -217,8 +208,7 @@ void parseSpace(char* str, char** parsed)
 	} 
 } 
 
-int processString(char* str, char** parsed, char** parsedpipe) 
-{ 
+int processString(char* str, char** parsed, char** parsedpipe) { 
 
 	char* strpiped[2]; 
 	int piped = 0; 
@@ -240,8 +230,11 @@ int processString(char* str, char** parsed, char** parsedpipe)
 		return 1 + piped; 
 } 
 
-int main() 
-{ 
+
+
+
+
+int main() { 
 	char inputString[MAXCOM], *parsedArgs[MAXLIST]; 
 	char* parsedArgsPiped[MAXLIST]; 
 	int execFlag = 0; 
