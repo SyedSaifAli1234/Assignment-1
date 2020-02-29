@@ -1,3 +1,5 @@
+//My shell
+
 const char *mypath[] = {
 	"./",
 	"/usr/bin/",
