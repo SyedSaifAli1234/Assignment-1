@@ -58,14 +58,10 @@ void execArgs(char** parsed) {
 	// Forking a child 
 	pid_t pid = fork(); 
 
-	if (pid == -1) { 
-		printf("\nFailed forking child.."); 
-		return; 
-	} 
-	else if (pid == 0) { 
+	if (pid == 0) { 
 		//printf("About to execute execvp\n");
 		if (execvp(parsed[0], parsed) < 0) { 
-			printf("\nCould not execute command.."); 
+			printf("\nUnable to execute the commmand"); 
 		}
 
 		exit(0); 
@@ -193,12 +189,13 @@ int parsePipe(char* str, char** strpiped) {
 	int i; 
 	for (i = 0; i < 2; i++) { 
 		strpiped[i] = strsep(&str, "|"); 
+		printf("strpiped[i]: %s\n", strpiped[i]);
 		if (strpiped[i] == NULL) 
 			break; 
 	} 
 
 	if (strpiped[1] == NULL) 
-		return 0; // returns zero if no pipe is found. 
+		return 0; // returns zero if no destination is found. 
 	else { 
 		return 1; 
 	} 
@@ -210,7 +207,8 @@ void parseSpace(char* str, char** parsed) {
 
 	for (i = 0; i < size2; i++) { 
 		parsed[i] = strsep(&str, " "); 
-		//printf("Parsed[i] : %s\n", parsed[i]);
+		printf("Parsed[i] : %s\n", parsed[i]);
+		printf("Parsed[i+1] : %s\n", parsed[i+1]);
 		if (parsed[i] == NULL){
 			//printf("Invalid command\n");
 			break; 
