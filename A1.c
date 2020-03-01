@@ -25,7 +25,7 @@ void init_shell() {
 	char* username = getenv("USER"); 
 	printf("\n\n\nUSER is: @%s", username); 
 	printf("\n"); 
-	sleep(2); 
+	sleep(1); 
 	clear(); 
 } 
 
@@ -35,20 +35,19 @@ int user_input(char* str) {
 
 	printf("\nprompt>>>");
 	fgets(buf, 15, stdin);
-	buf[strcspn(buf, "\n")] = 0;
-	//printf("works: %s", buf);
+	buf[strcspn(buf, "\n")] = 0;   //removes \n from the string
 	if (strlen(buf) != 0) { 
 		add_history(buf); 
 		strcpy(str, buf); 
-		return 0; 
+		return 0;
 	}
 	else { 
-		return 1; 
+		return 1;
 	} 
 } 
 
 // Function to print Current Directory. 
-void printDir() { 
+void dir() { 
 	char cwd[1024]; 
 	getcwd(cwd, sizeof(cwd)); 
 	printf("\nDir: %s", cwd); 
@@ -62,20 +61,25 @@ void execArgs(char** parsed) {
 	if (pid == -1) { 
 		printf("\nFailed forking child.."); 
 		return; 
-	} else if (pid == 0) { 
+	} 
+	else if (pid == 0) { 
+		printf("About to execute execvp\n");
 		if (execvp(parsed[0], parsed) < 0) { 
 			printf("\nCould not execute command.."); 
-		} 
+		}
+
 		exit(0); 
-	} else { 
+	} 
+	else { 
 		// waiting for child to terminate 
 		wait(NULL); 
-		return; 
+		printf("Done with execute execvp\n");
+		return;
 	} 
-} 
+}
 
 // Function where the piped system commands is executed 
-void execArgsPiped(char** parsed, char** parsedpipe) { 
+void execPipeArgs(char** parsed, char** parsedpipe) { 
 	// 0 is read end, 1 is write end 
 	int pipefd[2]; 
 	pid_t p1, p2; 
@@ -94,8 +98,8 @@ void execArgsPiped(char** parsed, char** parsedpipe) {
 		// Child 1 executing.. 
 		// It only needs to write at the write end 
 		close(pipefd[0]); 
-		dup2(pipefd[1], STDOUT_FILENO); 
-		close(pipefd[1]); 
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
 
 		if (execvp(parsed[0], parsed) < 0) { 
 			printf("\nCould not execute command 1.."); 
@@ -107,7 +111,7 @@ void execArgsPiped(char** parsed, char** parsedpipe) {
 
 		if (p2 < 0) { 
 			printf("\nCould not fork"); 
-			return; 
+			return;
 		} 
 
 		// Child 2 executing.. 
@@ -129,21 +133,20 @@ void execArgsPiped(char** parsed, char** parsedpipe) {
 } 
 
 // Help command builtin 
-void openHelp() { 
+void helper() { 
 	puts("\n---WELCOME TO HELP---"
 		"\nList of Commands supported:"
 		"\n>cd"
 		"\n>ls"
 		"\n>exit"
-		"\n>all other general commands available in UNIX shell"
 		"\n>pipe handling"
-		"\n>improper space handling"); 
+		"\n>improper space handling");
 
 	return; 
 } 
 
 // Function to execute builtin commands 
-int ownCmdHandler(char** parsed) { 
+int myCMD(char** parsed) { 
 	int NoOfOwnCmds = 4, i, switchOwnArg = 0; 
 	char* ListOfOwnCmds[NoOfOwnCmds]; 
 	char* username; 
@@ -160,7 +163,7 @@ int ownCmdHandler(char** parsed) {
 		} 
 	} 
 
-	printf("Value of switchOwnArg = %d\n", switchOwnArg);
+	//printf("Value of switchOwnArg = %d\n", switchOwnArg);
 
 	switch (switchOwnArg) { 
 	case 1: 
@@ -170,17 +173,17 @@ int ownCmdHandler(char** parsed) {
 		chdir(parsed[1]); 
 		return 1; 
 	case 3: 
-		openHelp(); 
+		helper(); 
 		return 1; 
 	case 4: 
 		username = getenv("USER"); 
-		printf("\nHello %s.\n", 
-			username); 
+		printf("\nHello %s.\n", username); 
 		return 1; 
 	default: 
-		break; 
+		printf("default mai hun\n");
+		break;
 	} 
-
+	printf("gonna return 0\n");
 	return 0; 
 } 
 
@@ -206,12 +209,17 @@ void parseSpace(char* str, char** parsed) {
 
 	for (i = 0; i < size2; i++) { 
 		parsed[i] = strsep(&str, " "); 
-
-		if (parsed[i] == NULL) 
+		//printf("Parsed[i] : %s\n", parsed[i]);
+		if (parsed[i] == NULL){
+			//printf("Invalid command\n");
 			break; 
-		if (strlen(parsed[i]) == 0) 
+		}
+		if (strlen(parsed[i]) == 0){
 			i--; 
-	} 
+		}
+		//printf("leaving parseSpace ka for\n");
+	}
+	//printf("Leaving parseSpace\n"); 
 } 
 
 int processString(char* str, char** parsed, char** parsedpipe) { 
@@ -228,12 +236,17 @@ int processString(char* str, char** parsed, char** parsedpipe) {
 	} else { 
 
 		parseSpace(str, parsed); 
+		//("str = %s and parsed = %s\n",str , parsed[0]);
 	} 
 
-	if (ownCmdHandler(parsed)) 
+	if (myCMD(parsed)){
+		printf("inside command handler ka if\n");
 		return 0; 
-	else
-		return 1 + piped; 
+	}
+	else{
+		printf("inside command handler ka else\n");
+		return 1 + piped;
+	} 
 } 
 
 
@@ -243,19 +256,20 @@ int processString(char* str, char** parsed, char** parsedpipe) {
 
 int main() { 
 	char inputString[size], *parsedArgs[size2]; 
-	char* parsedArgsPiped[size2]; 
+	char* pipeArgs[size2]; 
 	int execFlag = 0; 
 	init_shell(); 
 
 	while (1) { 
 		// print shell line 
-		printDir(); 
+		dir(); 
 		// take input 
 		if (user_input(inputString))
 			continue;
 		// process 
-		printf("outside take input ka if\n");
-		execFlag = processString(inputString, parsedArgs, parsedArgsPiped); 
+		//printf("outside take input ka if\n");
+		execFlag = processString(inputString, parsedArgs, pipeArgs); 
+		printf("execFlag: %d\n", execFlag);
 		// execflag returns zero if there is no command 
 		// or it is a builtin command, 
 		// 1 if it is a simple command 
@@ -266,7 +280,7 @@ int main() {
 			execArgs(parsedArgs); 
 
 		if (execFlag == 2) 
-			execArgsPiped(parsedArgs, parsedArgsPiped); 
+			execPipeArgs(parsedArgs, pipeArgs); 
 	} 
 	return 0; 
 } 
