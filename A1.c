@@ -63,7 +63,7 @@ void execArgs(char** parsed) {
 		return; 
 	} 
 	else if (pid == 0) { 
-		printf("About to execute execvp\n");
+		//printf("About to execute execvp\n");
 		if (execvp(parsed[0], parsed) < 0) { 
 			printf("\nCould not execute command.."); 
 		}
@@ -73,7 +73,7 @@ void execArgs(char** parsed) {
 	else { 
 		// waiting for child to terminate 
 		wait(NULL); 
-		printf("Done with execute execvp\n");
+		//printf("Done with execute execvp\n");
 		return;
 	} 
 }
@@ -147,17 +147,16 @@ void helper() {
 
 // Function to execute builtin commands 
 int myCMD(char** parsed) { 
-	int NoOfOwnCmds = 4, i, switchOwnArg = 0; 
+	int NoOfOwnCmds = 3, i, switchOwnArg = 0; 
 	char* ListOfOwnCmds[NoOfOwnCmds]; 
 	char* username; 
 
 	ListOfOwnCmds[0] = "exit"; 
 	ListOfOwnCmds[1] = "cd"; 
-	ListOfOwnCmds[2] = "help"; 
-	ListOfOwnCmds[3] = "hello"; 
+	ListOfOwnCmds[2] = "help";
 
 	for (i = 0; i < NoOfOwnCmds; i++) { 
-		if (strcmp(parsed[0], ListOfOwnCmds[i]) == 0) { 
+		if (strcmp(parsed[0], ListOfOwnCmds[i]) == 0) {
 			switchOwnArg = i + 1; 
 			break;
 		} 
@@ -170,20 +169,22 @@ int myCMD(char** parsed) {
 		printf("\nGoodbye\n"); 
 		exit(0); 
 	case 2: 
-		chdir(parsed[1]); 
+		if(parsed[1]==NULL){
+			chdir("..");
+		}
+		else{
+		//printf("In chdir: %s\n", parsed[1]);
+		chdir(parsed[1]);
+		}
 		return 1; 
 	case 3: 
 		helper(); 
-		return 1; 
-	case 4: 
-		username = getenv("USER"); 
-		printf("\nHello %s.\n", username); 
-		return 1; 
+		return 1;  
 	default: 
-		printf("default mai hun\n");
+		//printf("default mai hun\n");
 		break;
 	} 
-	printf("gonna return 0\n");
+	//printf("gonna return 0\n");
 	return 0; 
 } 
 
@@ -240,11 +241,11 @@ int processString(char* str, char** parsed, char** parsedpipe) {
 	} 
 
 	if (myCMD(parsed)){
-		printf("inside command handler ka if\n");
+		//printf("inside command handler ka if\n");
 		return 0; 
 	}
 	else{
-		printf("inside command handler ka else\n");
+		//printf("inside command handler ka else\n");
 		return 1 + piped;
 	} 
 } 
@@ -269,7 +270,7 @@ int main() {
 		// process 
 		//printf("outside take input ka if\n");
 		execFlag = processString(inputString, parsedArgs, pipeArgs); 
-		printf("execFlag: %d\n", execFlag);
+		//printf("execFlag: %d\n", execFlag);
 		// execflag returns zero if there is no command 
 		// or it is a builtin command, 
 		// 1 if it is a simple command 
