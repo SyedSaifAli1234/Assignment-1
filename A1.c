@@ -30,19 +30,20 @@ void init_shell() {
 } 
 
 // Function to take input 
-int takeInput(char* str) { 
+int user_input(char* str) { 
 	char buf[15]; 
 
 	//buf = readline("\nprompt> ");
 	printf("\nprompt>>>");
 	fgets(buf, 15, stdin);
 	buf[strcspn(buf, "\n")] = 0;
-	printf("works: %s", buf);
+	//printf("works: %s", buf);
 	if (strlen(buf) != 0) { 
 		add_history(buf); 
 		strcpy(str, buf); 
 		return 0; 
-	} else { 
+	}
+	else { 
 		return 1; 
 	} 
 } 
@@ -246,11 +247,11 @@ int main() {
 		// print shell line 
 		printDir(); 
 		// take input 
-		if (takeInput(inputString)) 
+		if (user_input(inputString))
 			continue;
 		// process 
-		execFlag = processString(inputString, 
-		parsedArgs, parsedArgsPiped); 
+		printf("outside take input ka if\n");
+		execFlag = processString(inputString, parsedArgs, parsedArgsPiped); 
 		// execflag returns zero if there is no command 
 		// or it is a builtin command, 
 		// 1 if it is a simple command 
