@@ -189,13 +189,13 @@ int parsePipe(char* str, char** strpiped) {
 	int i; 
 	for (i = 0; i < 2; i++) { 
 		strpiped[i] = strsep(&str, "|"); 
-		printf("strpiped[i]: %s\n", strpiped[i]);
+		//printf("strpiped[i] : %s\n", strpiped[i]);
 		if (strpiped[i] == NULL) 
 			break; 
 	} 
 
 	if (strpiped[1] == NULL) 
-		return 0; // returns zero if no destination is found. 
+		return 0; // returns zero if no pipe is found. 
 	else { 
 		return 1; 
 	} 
@@ -208,7 +208,6 @@ void parseSpace(char* str, char** parsed) {
 	for (i = 0; i < size2; i++) { 
 		parsed[i] = strsep(&str, " "); 
 		printf("Parsed[i] : %s\n", parsed[i]);
-		printf("Parsed[i+1] : %s\n", parsed[i+1]);
 		if (parsed[i] == NULL){
 			//printf("Invalid command\n");
 			break; 
@@ -229,7 +228,8 @@ int processString(char* str, char** parsed, char** parsedpipe) {
 	piped = parsePipe(str, strpiped); 
 
 	if (piped) { 
-		parseSpace(strpiped[0], parsed); 
+		parseSpace(strpiped[0], parsed); //it may be a simple command so adding it to parsed
+		printf("in next\n");
 		parseSpace(strpiped[1], parsedpipe); 
 
 	} else { 
@@ -238,13 +238,13 @@ int processString(char* str, char** parsed, char** parsedpipe) {
 		//("str = %s and parsed = %s\n",str , parsed[0]);
 	} 
 
-	if (myCMD(parsed)){
+	if (myCMD(parsed)){				// check here if the command is simple and can be handled
 		//printf("inside command handler ka if\n");
 		return 0; 
 	}
 	else{
 		//printf("inside command handler ka else\n");
-		return 1 + piped;
+		return 1 + piped;			//confirms kay pipe command hi hai
 	} 
 } 
 
