@@ -8,8 +8,8 @@
 #include<readline/readline.h> 
 #include<readline/history.h> 
 
-#define MAXCOM 1000 // max number of letters to be supported 
-#define MAXLIST 100 // max number of commands to be supported 
+#define size 1000 // max number of letters to be supported 
+#define size2 100 // max number of commands to be supported 
 
 // Clearing the shell using escape sequences 
 #define clear() printf("\033[H\033[J") 
@@ -25,7 +25,7 @@ void init_shell() {
 	char* username = getenv("USER"); 
 	printf("\n\n\nUSER is: @%s", username); 
 	printf("\n"); 
-	sleep(1); 
+	sleep(2); 
 	clear(); 
 } 
 
@@ -33,7 +33,6 @@ void init_shell() {
 int user_input(char* str) { 
 	char buf[15]; 
 
-	//buf = readline("\nprompt> ");
 	printf("\nprompt>>>");
 	fgets(buf, 15, stdin);
 	buf[strcspn(buf, "\n")] = 0;
@@ -161,12 +160,13 @@ int ownCmdHandler(char** parsed) {
 		} 
 	} 
 
+	printf("Value of switchOwnArg = %d\n", switchOwnArg);
+
 	switch (switchOwnArg) { 
 	case 1: 
 		printf("\nGoodbye\n"); 
 		exit(0); 
 	case 2: 
-		printf("In chdir when ls entered\n");
 		chdir(parsed[1]); 
 		return 1; 
 	case 3: 
@@ -204,7 +204,7 @@ int parsePipe(char* str, char** strpiped) {
 void parseSpace(char* str, char** parsed) { 
 	int i; 
 
-	for (i = 0; i < MAXLIST; i++) { 
+	for (i = 0; i < size2; i++) { 
 		parsed[i] = strsep(&str, " "); 
 
 		if (parsed[i] == NULL) 
@@ -237,9 +237,13 @@ int processString(char* str, char** parsed, char** parsedpipe) {
 } 
 
 
+
+
+
+
 int main() { 
-	char inputString[MAXCOM], *parsedArgs[MAXLIST]; 
-	char* parsedArgsPiped[MAXLIST]; 
+	char inputString[size], *parsedArgs[size2]; 
+	char* parsedArgsPiped[size2]; 
 	int execFlag = 0; 
 	init_shell(); 
 
