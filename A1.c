@@ -148,15 +148,15 @@ void helper() {
 // Function to execute builtin commands 
 int myCMD(char** parsed) { 
 	int NoOfOwnCmds = 3, i, switchOwnArg = 0; 
-	char* ListOfOwnCmds[NoOfOwnCmds]; 
+	char* mycmds[NoOfOwnCmds]; 
 	char* username; 
 
-	ListOfOwnCmds[0] = "exit"; 
-	ListOfOwnCmds[1] = "cd"; 
-	ListOfOwnCmds[2] = "help";
+	mycmds[0] = "exit"; 
+	mycmds[1] = "cd"; 
+	mycmds[2] = "help";
 
 	for (i = 0; i < NoOfOwnCmds; i++) { 
-		if (strcmp(parsed[0], ListOfOwnCmds[i]) == 0) {
+		if (strcmp(parsed[0], mycmds[i]) == 0) {
 			switchOwnArg = i + 1; 
 			break;
 		} 
@@ -170,7 +170,7 @@ int myCMD(char** parsed) {
 		exit(0); 
 	case 2: 
 		if(parsed[1]==NULL){
-			chdir("..");
+			chdir(".."); //goes back 1 folder
 		}
 		else{
 		//printf("In chdir: %s\n", parsed[1]);
