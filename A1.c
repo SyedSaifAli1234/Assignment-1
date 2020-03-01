@@ -81,12 +81,12 @@ void execPipeArgs(char** parsed, char** parsedpipe) {
 	pid_t p1, p2; 
 
 	if (pipe(pipefd) < 0) { 
-		printf("\nPipe could not be initialized"); 
+		printf("\nError creating pipe"); 
 		return; 
 	} 
 	p1 = fork(); 
 	if (p1 < 0) { 
-		printf("\nCould not fork"); 
+		printf("\nUnable to fork"); 
 		return; 
 	} 
 
@@ -98,15 +98,16 @@ void execPipeArgs(char** parsed, char** parsedpipe) {
 		close(pipefd[1]);
 
 		if (execvp(parsed[0], parsed) < 0) { 
-			printf("\nCould not execute command 1.."); 
+			printf("\nUnable to execute command"); 
 			exit(0); 
 		} 
-	} else { 
+	} 
+	else { 
 		// Parent executing 
 		p2 = fork(); 
 
 		if (p2 < 0) { 
-			printf("\nCould not fork"); 
+			printf("\nUnable to fork"); 
 			return;
 		} 
 
@@ -117,10 +118,11 @@ void execPipeArgs(char** parsed, char** parsedpipe) {
 			dup2(pipefd[0], STDIN_FILENO); 
 			close(pipefd[0]); 
 			if (execvp(parsedpipe[0], parsedpipe) < 0) { 
-				printf("\nCould not execute command 2.."); 
+				printf("\nUnable to execute the command"); 
 				exit(0); 
 			} 
-		} else { 
+		} 
+		else { 
 			// parent executing, waiting for two children 
 			wait(NULL); 
 			wait(NULL); 
